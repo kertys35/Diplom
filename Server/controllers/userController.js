@@ -2,14 +2,13 @@ const apiError = require('../error/apiError.js')
 const bcrypt = require('bcrypt')
 const {User, Basket} = require('../models/models.js')
 const jwt = require('jsonwebtoken')
-const SECRET_KEY = "osiauchnfsaasdjkl"
 
 const generateToken = (userId, username, role) =>{
     return jwt.sign({
         userId,
         username, 
         role}, 
-        SECRET_KEY, 
+        process.env.SECRET_KEY, 
         {expiresIn: '24h'})
 }
 
