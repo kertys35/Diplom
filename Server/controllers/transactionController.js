@@ -5,9 +5,15 @@ const {Transaction, TransactionList, CreditCard, Currency} = require('../models/
 class transactionController{
     async create(req, res, next){           //Процесс создания транзакции (оплаты)
         try{
-        let {date, basketId, moneySum, cvcCode, expirationDate, cardNum, bankId, receiverId} = req.body
+        let { basketId, moneySum, cvcCode, expirationDate, cardNum, bankId, receiverId} = req.body
         let card, receiverCard
         let balance, receiverBalance
+        const date = new Date();
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+
+        let data = `${day}-${month}-${year}`;
         //Поиск карты, ипользуемой при оплате
         if(!bankId){
             return next(apiError.badRequest("Не указан банк выдавщий карту!"))
@@ -28,7 +34,7 @@ class transactionController{
              balance = Number(card.balance)
         }
         if(balance < Number(moneySum)){     //Не хватает на оплату товара
-            return res.statur(402).json("На карте не хватает средств дляя оплаты!")
+            return next(apiError.badRequest("На карте не хватает средств дляя оплаты!"))
         } else{                                 //Процесс оплаты
                 balance -= Number(moneySum)
                 if(currency.name != "Рубль"){
