@@ -23,6 +23,7 @@ const Basket = sequelize.define('Basket', {
 
 const Basket_Item = sequelize.define('Basket_Item', {
     basketInItemId:{type:DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    quantity:{type: DataTypes.INTEGER, allowNull: false},
 },
 {
   freezeTableName: true,  //Не изменять имя таблицы
@@ -34,6 +35,7 @@ const Item = sequelize.define('Item', {
     price:{type: DataTypes.DECIMAL(10,2), allowNull: false},
     description:{type: DataTypes.TEXT, allowNull: false},
     img:{type: DataTypes.STRING(255), allowNull: false},
+    quantity:{type: DataTypes.INTEGER, allowNull: false},
 },
 {
   freezeTableName: true,  //Не изменять имя таблицы

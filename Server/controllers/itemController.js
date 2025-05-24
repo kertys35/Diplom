@@ -1,5 +1,6 @@
 const apiError = require('../error/apiError.js')
 const {Item} = require('../models/models.js')
+const {Op} = require('sequelize')
 const fs = require('fs')
 const uuid = require('uuid')
 const path = require('path')
@@ -26,7 +27,7 @@ class itemController{
         limit = limit || 10
         let offset = page * limit - limit
         let items
-        items = await Item.findAndCountAll({limit, offset})
+        items = await Item.findAndCountAll({where: {quantity:{[Op.not]: '0'}}, limit, offset})
         return res.json(items)
     }
     async getOne(req, res, next){       //Получить один товар 
