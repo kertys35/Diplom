@@ -8,12 +8,12 @@ const path = require('path')
 class itemController{
     async create(req, res, next){       //Создать товар
         try{
-            const {name, price, description} = req.body
+            const {name, price, description, quantity} = req.body
             const {img} = req.files
             let filename = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', filename))
 
-            const item = await Item.create({name, price, description, img: filename})
+            const item = await Item.create({name, price, description, img: filename, quantity})
             return res.json(item)
 
         } catch(e){
