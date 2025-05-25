@@ -90,7 +90,7 @@ const BasketPage = observer(({cart, setCart}) => {
               Оплатить</Button>
       </div>
       :
-      <></>
+      <h2 className="d-flex justify-content-center align-content-center">Пока что здесь пусто</h2>
       }
 
     </Container>

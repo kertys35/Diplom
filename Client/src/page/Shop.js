@@ -10,14 +10,14 @@ import Pages from "../components/Pages.js";
 const Shop = observer(({cart, setCart}) => {
   const {item} = useContext(Context)
   useEffect(() => {               //Получение товаров с сервера
-    getItems(1, 3).then(data => {
+    getItems(1, 8).then(data => {
       item.setItems(data.rows);
       item.setTotal(data.count);
     }, )
   }, [])
 
     useEffect(() => {               //Получение товаров на отдельной странице
-    getItems(item.page, 3).then(data => {
+    getItems(item.page, 8).then(data => {
       item.setItems(data.rows);
       item.setTotal(data.count);
     }, )

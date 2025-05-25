@@ -34,9 +34,9 @@ const NavBar = observer(() => {
          <></>}
         {user.isAuth && user.role === 'ADMIN' ?
         <Nav className="ml-auto" style ={{color:'white'}}>
+            <Button variant="outline-light" onClick={() => navigate('/admin')} className = "me-2" >Админ</Button>
             <Button variant="outline-light" onClick={() => navigate('/basket/'+ basket.basketId)} className = "me-2" >Корзина</Button>
             <Button variant="outline-light" onClick={()=> logOut()}>Выйти</Button>
-            <Button variant="outline-light" onClick={() => navigate('/admin')} className = "ms-2" >Админ</Button>
         </Nav>  
         :
         <></>

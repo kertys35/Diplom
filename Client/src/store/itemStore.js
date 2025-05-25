@@ -5,7 +5,7 @@ export default class itemStore {
         this._items = [];
         this._page = 1;
         this._totalitems = 0;
-        this._limit = 3;
+        this._limit = 8;
         makeAutoObservable(this);
     }
 

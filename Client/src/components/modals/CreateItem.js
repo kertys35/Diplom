@@ -8,6 +8,7 @@ const CreateItem = ({show, onHide}) => {
   const [name, setName] = useState('')
   const [description, setDescriptiopn] = useState('')
   const [img, setImg] = useState(null)
+  const [quantity, setQuantity] = useState(0);
   const selectFile = (e) =>{
       setImg(e.target.files[0])
   }
@@ -17,6 +18,7 @@ const CreateItem = ({show, onHide}) => {
     formData.append('price', `${price}`);
     formData.append('description', description);
     formData.append('img', img);
+    formData.append('quantity', quantity);
     createOneItem(formData).then(data=>onHide())
   }
   return (
@@ -53,6 +55,13 @@ const CreateItem = ({show, onHide}) => {
           onChange={(e) => setDescriptiopn(e.target.value)}
           className="mt-3"
           placeholder= {"Введите описание товара"}
+        />
+        <Form.Control
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          className="mt-3"
+          placeholder= {"Введите количество товаров на складе"}
+          type="number"
         />     
         <Form.Control
           className="mt-3"
