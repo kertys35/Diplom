@@ -31,8 +31,8 @@ const BasketPage = observer(({cart, setCart}) => {
       const itemExists = cart.find((product) => product.itemId === item.itemId); // Проверить корзину на наличие товара
       addItem(basket.basketId, itemExists.itemId);
       if (itemExists) {
-      setCart(
-          cart.map((product) => 
+      setCart(                                      //Увеличение товара на один
+          cart.map((product) =>             
           product.itemId === item.itemId
               ? { ...product, quantity: product.quantity + 1 }
               : product 
@@ -42,16 +42,16 @@ const BasketPage = observer(({cart, setCart}) => {
     }
 
     function handleDecrease({item}){  //Уменьшение товаров
-    const selectedItem = cart.find((product) => product.itemId === item.itemId);//Проверка на наличие товара в корзине
+    const selectedItem = cart.find((product) => product.itemId === item.itemId);  //Проверка на наличие товара в корзине
     deleteItemInBasket(basket.basketId, selectedItem.itemId);
      
     if (selectedItem.quantity === 1) {
-    setCart(cart.filter((product) => product.itemId !== item.itemId)); // if the quantity of the item is 1, remove the item from the cart
+    setCart(cart.filter((product) => product.itemId !== item.itemId)); // Уменьшение товара
   } else {
     setCart(
       cart.map((product) =>
         product.itemId === item.itemId
-          ? { ...product, quantity: product.quantity - 1 } // if the quantity of the item is greater than 1, decrease the quantity of the item
+          ? { ...product, quantity: product.quantity - 1 } // Удаление товара
           : product
       )
     );

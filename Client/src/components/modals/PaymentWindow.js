@@ -21,7 +21,7 @@ const PaymentWindow = ({show, onHide, sum, result, message}) => {
         <Col className="justify-content-center align-items-center d-flex">
         <Image width={100} height ={100} src = {'successMark.png'}></Image>
          </Col>
-         <h1 className="justify-content-center align-items-center d-flex">Успешно</h1>
+         <h1 className="justify-content-center align-items-center d-flex">Успешная операция!</h1>
          <h1 className="justify-content-center align-items-center d-flex">Оплачено {sum} Руб.</h1>
       </Modal.Body>
       :
@@ -29,7 +29,7 @@ const PaymentWindow = ({show, onHide, sum, result, message}) => {
         <Col className="justify-content-center align-items-center d-flex">
         <Image width={100} height ={100} src = {'failureMark.png'}></Image>
          </Col>
-         <h1 className="justify-content-center align-items-center d-flex">Неуспешно</h1>
+         <h1 className="justify-content-center align-items-center d-flex">Ошибка!</h1>
          <h1 className="justify-content-center align-items-center d-flex">{message}</h1>
       </Modal.Body>
 }

@@ -30,15 +30,15 @@ const ItemPage = observer(({cart, setCart}) => {
     const itemExists = cart.find((product) => product.itemId === item.itemId); // Проверка на предмет в корзине
 
     if (itemExists) {
-    setCart(
+    setCart(                                          //Увеличение товара на один
         cart.map((product) => 
         product.itemId === item.itemId
             ? { ...product, quantity: product.quantity + 1 }
             : product 
         )
     );
-    } else {
-    setCart([...cart, { ...item, quantity: 1 }]);
+    } else {  
+    setCart([...cart, { ...item, quantity: 1 }]);   //Добавление товара в корзину
     }
     console.log(cart);
   }
