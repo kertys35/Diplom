@@ -6,6 +6,7 @@ import { getAllBanks } from "../http/bankAPI";
 import { observer } from "mobx-react-lite";
 import { transactionPayment } from "../http/transactionAPI.js";
 import { clearBasket } from "../http/basketAPI.js";
+import PaymentWindow from "../components/modals/PaymentWindow.js";
 
 const PaymentPage = observer(({cart, setCart}) => {
 
@@ -13,26 +14,35 @@ const PaymentPage = observer(({cart, setCart}) => {
     const {bank} = useContext(Context);
     const {basket} = useContext(Context);
     const [finalCost, setCost] = useState(0)
+    const [result, setResult] = useState(false);
+    const [itemVisible, setItemVisible] = useState(false)
+    const [message, setMessage] = useState();
+    const navigate = useNavigate();
 
+    const hideSuccess = () =>{    //Завершение при успешной операции 
+        setItemVisible(false);
+        navigate('/')
+    } 
+    const hideFailure = () =>{    //Завершение при неуспешной операции
+        setItemVisible(false);
+    }
     useEffect(() => {//Подсчет стоимости товаров
-
     var cost = 0;
     cart.map((product) => {
-      cost += Number(product.price);
+      cost += Number(product.price) * Number(product.quantity);
     })
     setCost(cost);
     return
-    })
+    }, [])
 
     const getPayment = () => {
-      try {
       let cardNumber = '';
       let j = 0;
       for(let i=0; i < 20; i++)
       {
-        if (num[i] !=' ')
+        if (num[i] !==' ')
           {
-            if(j == 16)
+            if(j === 16)
               break;
             cardNumber += num[i];
             j++;
@@ -43,39 +53,41 @@ const PaymentPage = observer(({cart, setCart}) => {
       const formData = new FormData();
       formData.append('bankId', `${bankValue}`);
       formData.append('moneySum', `${finalCost}`);
-
       formData.append('cardNum', `${cardNumber}`);
       const expirationDate ='20'+expy[3] + expy[4] + '-' +expy[0] + expy[1] + '-01';
       formData.append('expirationDate', expirationDate);
       formData.append('cvcCode', `${cvc}`);
       formData.append('receiverId', `${receiverId}`);
       formData.append('basketId', `${basket.basketId}`);
-
-      console.log(bank);
-      console.log(finalCost);
-      console.log(num);
-      console.log(expirationDate);
-      console.log(cvc);
-      console.log(5);
-      console.log(basket.basketId);
-      for (const value of formData.values()) {
-      console.log(value);
+      transactionPayment(formData).then(value => {
+        console.log(value)
+        if (value === 'Успешная транзакция!')
+        {     
+              setResult(true);
+              setCart([]);
+              clearBasket(basket.basketId);
+        } else {
+            if (value === 'Не указаны полные данные карты!' || value === 'На карте не хватает средств дляя оплаты!' || value === 'Такой карты не существует!' || value === 'Не корректно введена дата!')
+            {
+                setResult(false);
+                setMessage(value);
+            } else{
+                setResult(false);
+                setMessage('Непредвиденная ошибка');
+            }
         }
-      transactionPayment(formData) 
-      } catch(e){
-        alert(e.message)
-      }
+      })
     }
     useEffect(() => {
       getAllBanks().then(data => {
         bank.setBanks(data);
       })
-    }, [])
+    }, [bank])
     const [cvc, setCVC] = useState('');
     const [expy, setExpy] = useState('');
     const [num, setNum] = useState('');
     const [bankValue, setBank] = useState(1);
-    const navigate = useNavigate();
+
 
     //Банк
     const handleBank = (e) =>{
@@ -135,13 +147,21 @@ const PaymentPage = observer(({cart, setCart}) => {
     setCVC(input);
     }
     const handlePayment = async() =>{  //Обработка операций
-      getPayment();
-      setCart([]);
-      clearBasket(basket.basketId);
-      navigate('/basket')
+      if (cvc.length === 3 && num.length === 19 && expy.length === 5){    //Проверка заполнения данных
+      getPayment()
+      setItemVisible(true);
+      } else {
+        alert('Не заполнены все данные карты!')
+      }
+
     };
   return (
     <Container fluid>
+      {result ?
+       <PaymentWindow show = {itemVisible} onHide={() => hideSuccess()} sum={finalCost.toFixed(2)} result={1}/>
+       :
+       <PaymentWindow show = {itemVisible} onHide={() => hideFailure()} sum={finalCost.toFixed(2)} message = {message}result={0}/>
+      }
       <Row className="d-flex justify-content-center mt-3">
           <Card className="mt-5 d-flex flex-column align-items-center justify-content-around"
     style={{width:400, height:550, fontSize:32, border:'3px solid black'}}>

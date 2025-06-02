@@ -2,6 +2,10 @@ const { transaction } = require('../db.js')
 const apiError = require('../error/apiError.js')
 const {Transaction, TransactionList, CreditCard, Currency} = require('../models/models.js')
 
+function isDateValid(dateStr) {
+  return !isNaN(new Date(dateStr));
+}
+
 class transactionController{
     async create(req, res, next){           //Процесс создания транзакции (оплаты)
         try{
@@ -9,11 +13,12 @@ class transactionController{
         let card, receiverCard
         let balance, receiverBalance
         const date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-
-        let data = `${day}-${month}-${year}`;
+        
+        const dateCheck = new Date(expirationDate)
+        if (dateCheck.toString() === "Invalid Date")
+        {
+            return next(apiError.badRequest("Не корректно введена дата!"))
+        }
         //Поиск карты, ипользуемой при оплате
         if(!bankId){
             return next(apiError.badRequest("Не указан банк выдавщий карту!"))
@@ -22,7 +27,7 @@ class transactionController{
         }else{
             card = await CreditCard.findOne({where:{bankId, cvcCode, cardNum, expirationDate}})
         }
-        if(!card){
+        if(card === null){
             return next(apiError.badRequest("Такой карты не существует!"))
         }
         const currency = await Currency.findOne({where: {currencyId: card.currencyId}}) //Валюта, которой оплачивают покупку
@@ -56,7 +61,7 @@ class transactionController{
         const transaction = await Transaction.create({date, basketId, moneySum})
         const newcard = await CreditCard.update({balance: balance}, {where:{creditCardId: card.creditCardId}})
         const list = await TransactionList.create({transactionId: transaction.transactionId, creditCardId: card.creditCardId})
-        return res.json({TransactionList:list, Transaction: transaction})
+        return res.json('Успешная транзакция!')
         }catch(e){
             return next(apiError.badRequest(e))
         }

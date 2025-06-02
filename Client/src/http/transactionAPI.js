@@ -7,6 +7,7 @@ export const transactionPayment = async(payment) => {
     return data;
    } catch(e){
     console.log(e.response.data.message);
+    return e.response.data.message
    }
 }
 
