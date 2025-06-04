@@ -40,7 +40,6 @@ const ItemPage = observer(({cart, setCart}) => {
     } else {  
     setCart([...cart, { ...item, quantity: 1 }]);   //Добавление товара в корзину
     }
-    console.log(cart);
   }
 
  return (

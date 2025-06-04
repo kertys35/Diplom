@@ -1,19 +1,35 @@
 const { transaction } = require('../db.js')
 const apiError = require('../error/apiError.js')
 const {Transaction, TransactionList, CreditCard, Currency} = require('../models/models.js')
-
-function isDateValid(dateStr) {
-  return !isNaN(new Date(dateStr));
-}
-
+const CryptoJS = require('crypto-js');
+    const decryptPayload = (ciphertext, secretKey) => {   //расшифровка данных
+      const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      return decryptedData;
+    };
 class transactionController{
     async create(req, res, next){           //Процесс создания транзакции (оплаты)
         try{
-        let { basketId, moneySum, cvcCode, expirationDate, cardNum, bankId, receiverId} = req.body
+        let {basketId, moneySum, cvcCode, expirationDate, cardNum, bankId, receiverId} = req.body
         let card, receiverCard
         let balance, receiverBalance
         const date = new Date();
-        
+        //Расшифровывание данных
+        const decryptedBank = decryptPayload(bankId, process.env.PRIVATE_KEY);
+        const decryptedMoney = decryptPayload(moneySum, process.env.PRIVATE_KEY);
+        const decryptedBasket = decryptPayload(basketId, process.env.PRIVATE_KEY);
+        const decryptedCVC = decryptPayload(cvcCode, process.env.PRIVATE_KEY);
+        const decryptedExpiration = decryptPayload(expirationDate, process.env.PRIVATE_KEY);
+        const decryptedCard = decryptPayload(cardNum, process.env.PRIVATE_KEY);
+        const decryptedReceiver = decryptPayload(receiverId, process.env.PRIVATE_KEY);
+
+        bankId = decryptedBank;
+        basketId = decryptedBasket;
+        moneySum = decryptedMoney;
+        cvcCode = decryptedCVC;
+        expirationDate = decryptedExpiration;
+        cardNum = decryptedCard;
+        receiverId = decryptedReceiver;
         const dateCheck = new Date(expirationDate)
         if (dateCheck.toString() === "Invalid Date")
         {

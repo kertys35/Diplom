@@ -48,8 +48,7 @@ const App = observer(() => {
                 
               })
            
-          setCart(data);     
-          console.log(data);           
+          setCart(data);              
           return items;
         }
       loadBasketItems()

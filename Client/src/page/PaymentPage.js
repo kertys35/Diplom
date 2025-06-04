@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import { transactionPayment } from "../http/transactionAPI.js";
 import { clearBasket } from "../http/basketAPI.js";
 import PaymentWindow from "../components/modals/PaymentWindow.js";
+import CryptoJS from 'crypto-js';
 
 const PaymentPage = observer(({cart, setCart}) => {
 
@@ -35,6 +36,11 @@ const PaymentPage = observer(({cart, setCart}) => {
     return
     }, [])
 
+    const encryptPayload = (payload, secretKey) => {      //Шифрование данных
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(payload), secretKey).toString();
+      return ciphertext;
+    }
+
     const getPayment = () => {
       let cardNumber = '';
       let j = 0;
@@ -49,18 +55,27 @@ const PaymentPage = observer(({cart, setCart}) => {
 
           }
       }
-      const receiverId = 5;
-      const formData = new FormData();
-      formData.append('bankId', `${bankValue}`);
-      formData.append('moneySum', `${finalCost}`);
-      formData.append('cardNum', `${cardNumber}`);
       const expirationDate ='20'+expy[3] + expy[4] + '-' +expy[0] + expy[1] + '-01';
-      formData.append('expirationDate', expirationDate);
-      formData.append('cvcCode', `${cvc}`);
-      formData.append('receiverId', `${receiverId}`);
-      formData.append('basketId', `${basket.basketId}`);
+      const receiverId = 5;
+
+      //Шифрование данных
+      const encriptedBank = encryptPayload(bankValue, process.env.REACT_APP_SECRET_KEY);
+      const encriptedMoney = encryptPayload(finalCost, process.env.REACT_APP_SECRET_KEY);
+      const encriptedCard = encryptPayload(cardNumber, process.env.REACT_APP_SECRET_KEY);
+      const encriptedExpiration = encryptPayload(expirationDate, process.env.REACT_APP_SECRET_KEY);
+      const encriptedCVC = encryptPayload(cvc, process.env.REACT_APP_SECRET_KEY);
+      const encriptedReceiver = encryptPayload(receiverId, process.env.REACT_APP_SECRET_KEY);
+      const encriptedBasket = encryptPayload(basket.basketId, process.env.REACT_APP_SECRET_KEY);
+
+      const formData = new FormData();
+      formData.append('bankId', encriptedBank);
+      formData.append('moneySum', encriptedMoney);
+      formData.append('cardNum', encriptedCard);
+      formData.append('expirationDate', encriptedExpiration);
+      formData.append('cvcCode', encriptedCVC);
+      formData.append('receiverId', encriptedReceiver);
+      formData.append('basketId', encriptedBasket);
       transactionPayment(formData).then(value => {
-        console.log(value)
         if (value === 'Успешная транзакция!')
         {     
               setResult(true);
