@@ -10,7 +10,6 @@ const CryptoJS = require('crypto-js');
 class paymentTransactionController{
     async create(req, res, next){           //Процесс создания транзакции (оплаты)
         try{
-            console.log("WORKING!!!!")
         let {basketId, moneySum, cvcCode, expirationDate, cardNum, bankId, receiverId} = req.body
         let card, receiverCard
         let balance, receiverBalance
@@ -34,7 +33,7 @@ class paymentTransactionController{
         const dateCheck = new Date(expirationDate)
         if (dateCheck.toString() === "Invalid Date")
         {
-            return next(apiError.badRequest("Не корректно введена дата!"))
+            return next(apiError.badRequest("Некорректно введена дата!"))
         }
         //Поиск карты, ипользуемой при оплате
         if(!bankId){
