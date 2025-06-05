@@ -69,7 +69,7 @@ const BasketPage = observer(({cart, setCart}) => {
         return(
           <Row>
           <Col className="d-flex justify-content-center align-content-center">
-          <Container  className="d-flex justify-content-center align-content-center mt-4">
+          <Container  key = {item.itemId} className="d-flex justify-content-center align-content-center mt-4">
           <Image width = {50} height = {50} src = {'http://localhost:5000/' + item.img}/>
           <h1 className="d-flex me-2">{item.name}</h1>
           <h1 className="d-flex me-2">{item.price} Руб.</h1>

@@ -1,4 +1,4 @@
-import {$host, $authHost} from "./index.js"
+import {$host, $authHost} from "./indexAPI.js"
 import { jwtDecode } from 'jwt-decode'
 
 export const registration = async(username, password) => {

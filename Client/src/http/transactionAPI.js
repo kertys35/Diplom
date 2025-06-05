@@ -1,4 +1,4 @@
-import {$host, $authHost} from "./index.js"
+import {$host, $authHost} from "./indexAPI.js"
 
 export const transactionPayment = async(payment) => {
    try{

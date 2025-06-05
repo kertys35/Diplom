@@ -1,4 +1,4 @@
-import {$host, $authHost} from "./index.js"
+import {$host, $authHost} from "./indexAPI.js"
 
 export const createOneItem = async(item) => {
     const {data} = await $authHost.post('api/item', item);

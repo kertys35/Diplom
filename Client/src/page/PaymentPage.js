@@ -82,7 +82,7 @@ const PaymentPage = observer(({cart, setCart}) => {
               setCart([]);
               clearBasket(basket.basketId);
         } else {
-            if (value === 'Не указаны полные данные карты!' || value === 'На карте не хватает средств дляя оплаты!' || value === 'Такой карты не существует!' || value === 'Не корректно введена дата!')
+            if (value === 'Не указаны полные данные карты!' || value === 'На карте не хватает средств дляя оплаты!' || value === 'Такой карты не существует!' || value === 'Некорректно введена дата!')
             {
                 setResult(false);
                 setMessage(value);
