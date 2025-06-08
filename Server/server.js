@@ -8,8 +8,6 @@ const errorHandler = require('./middleware/errorHandling.js')
 const fileUpload = require('express-fileupload')
 const path = require('path')
 
-const PORT = 5000
-
 const app = express()   //Инициирование приложения
 app.use(cors())         
 app.use(express.json())
@@ -24,7 +22,7 @@ const start = async () => {     //Основная функция сервера
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        app.listen(PORT, () => console.log(`server started on port ${PORT}`))   //Подключение к БД
+        app.listen(process.env.PORT, () => console.log(`server started on port ${process.env.PORT}`))   //Подключение к БД
     }catch(e){
         console.log(e)
     }

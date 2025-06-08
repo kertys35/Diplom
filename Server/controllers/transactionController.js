@@ -7,7 +7,6 @@ class transactionController{
     async create(req, res, next){           //Процесс создания транзакции (оплаты)
         try{
         const result = await gatewayPayment(req.body);
-        console.log(result);
         return res.json(result);
         }catch(e){
             return next(apiError.badRequest(e))

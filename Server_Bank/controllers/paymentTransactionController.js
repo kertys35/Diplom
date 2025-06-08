@@ -55,7 +55,7 @@ class paymentTransactionController{
              balance = Number(card.balance)
         }
         if(balance < Number(moneySum)){     //Не хватает на оплату товара
-            return next(apiError.badRequest("На карте не хватает средств дляя оплаты!"))
+            return next(apiError.badRequest("На карте не хватает средств для оплаты!"))
         } else{                                 //Процесс оплаты
                 balance -= Number(moneySum)
                 if(currency.name != "Рубль"){

@@ -11,7 +11,6 @@ import CryptoJS from 'crypto-js';
 
 const PaymentPage = observer(({cart, setCart}) => {
 
-
     const {bank} = useContext(Context);
     const {basket} = useContext(Context);
     const [finalCost, setCost] = useState(0)
@@ -81,14 +80,17 @@ const PaymentPage = observer(({cart, setCart}) => {
               setResult(true);
               setCart([]);
               clearBasket(basket.basketId);
+              setItemVisible(true);
         } else {
-            if (value === 'Не указаны полные данные карты!' || value === 'На карте не хватает средств дляя оплаты!' || value === 'Такой карты не существует!' || value === 'Некорректно введена дата!')
+            if (value === 'Не указаны полные данные карты!' || value === 'На карте не хватает средств для оплаты!' || value === 'Такой карты не существует!' || value === 'Некорректно введена дата!')
             {
                 setResult(false);
                 setMessage(value);
+                setItemVisible(true);
             } else{
                 setResult(false);
                 setMessage('Непредвиденная ошибка');
+                setItemVisible(true);
             }
         }
       })
@@ -163,8 +165,7 @@ const PaymentPage = observer(({cart, setCart}) => {
     }
     const handlePayment = async() =>{  //Обработка операций
       if (cvc.length === 3 && num.length === 19 && expy.length === 5){    //Проверка заполнения данных
-      getPayment()
-      setItemVisible(true);
+      await getPayment();
       } else {
         alert('Не заполнены все данные карты!')
       }

@@ -48,11 +48,12 @@ const App = observer(() => {
                 
               })
            
-          setCart(data);              
-          return items;
+          setCart(data);         
+          await basket.setItems(data);     
+          return data;
         }
       loadBasketItems()
-  }, [user.role, basket.quantity])
+  }, [user.role])
 
 
   if (load) {
